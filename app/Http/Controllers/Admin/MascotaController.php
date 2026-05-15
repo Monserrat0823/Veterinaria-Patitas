@@ -16,7 +16,7 @@ class MascotaController extends Controller
     {
         $mascotas = Mascota::all();
 
-        return view('admin.mascotas.index', compact('mascotas'));
+        return view('mascotas.index', compact('mascotas'));
     }
 
     /**
@@ -26,7 +26,7 @@ class MascotaController extends Controller
     {
         $duenos = Dueno::all();
 
-        return view('admin.mascotas.create', compact('duenos'));
+        return view('mascotas.create', compact('duenos'));
     }
 
     /**
@@ -63,7 +63,7 @@ class MascotaController extends Controller
      */
     public function show(Mascota $mascota)
     {
-        return view('admin.mascotas.show', compact('mascota'));
+        return view('mascotas.show', compact('mascota'));
     }
 
     /**
@@ -73,7 +73,7 @@ class MascotaController extends Controller
     {
         $duenos = Dueno::all();
 
-        return view('admin.mascotas.edit', compact('mascota', 'duenos'));
+        return view('mascotas.edit', compact('mascota', 'duenos'));
     }
 
     /**

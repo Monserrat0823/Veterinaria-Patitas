@@ -15,12 +15,12 @@ class CitaController extends Controller
 {
     public function index()
     {
-        return view('admin.citas.index');
+        return view('citas.index');
     }
 
     public function create()
     {
-        return view('admin.citas.create');
+        return view('citas.create');
     }
 
     public function store(Request $request)
@@ -30,12 +30,12 @@ class CitaController extends Controller
 
     public function show(string $id)
     {
-        return view('admin.citas.show');
+        return view('admi.citas.show');
     }
 
     public function edit(Mascota $mascota, Cita $cita)
     {
-        return view('admin.citas.edit',compact('mascota','cita'));        
+        return view('citas.edit',compact('mascota','cita'));        
     }
 
 public function update(Request $request, Cita $cita)
@@ -63,7 +63,7 @@ public function update(Request $request, Cita $cita)
         'text' => 'Cita actualizada exitosamente.',
     ]);
 
-    return redirect()->route('admin.citas.index');
+    return redirect()->route('citas.index');
 }
 
     public function destroy(string $id)

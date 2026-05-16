@@ -82,4 +82,4 @@ class VeterinarioController extends Controller
 
         return redirect()->route('admin.veterinarios.index');
     }
-}
+}   

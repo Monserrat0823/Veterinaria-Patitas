@@ -40,17 +40,17 @@
         <aside id="top-bar-sidebar"
             class="fixed top-0 left-0 z-40 w-64 h-full transition-transform -translate-x-full sm:translate-x-0 font-poppins"
             aria-label="Sidebar">
-            <div class="h-full px-3 py-4 overflow-y-auto bg-neutral-primary-soft border-e border-default bg-blue-100">
+            <div class="h-full px-3 py-4 overflow-y-auto bg-gradient-to-b from-cyan-500 to-blue-700 shadow-2xl">
                 <a href="" class="flex items-center ps-2.5 mb-5">
                      
-                    <span class="self-center text-lg text-heading font-semibold whitespace-nowrap">Veterinaria Patitas</span>
+                    <span class="self-center text-lg text-white text-2xl tracking-wide font-semibold whitespace-nowrap">Veterinaria Patitas</span>
                 </a>
                 <ul class="space-y-2 font-medium">
                     @foreach ($links as $link)
                         <li>
                             {{-- -REVISA SI EXITE --}}
                             @isset($link['header'])
-                                <div class="px-2 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                                <div class="px-2 py-1 text-xs font-semibold text-blue-100 uppercase tracking-wider">
                                     {{ $link['header'] }}
 
                                 </div>
@@ -82,8 +82,8 @@
                                     </ul>
                                 @else
                                     <a href="{{ $link['href'] }}"
-                                        class="flex items-center px-2 py-1.5 text-body rounded-base hover:bg-blue-300 hover:text-blue-900 group {{ $link['active'] ? 'bg-blue-300' : '' }}">
-                                        <span class="w-6 h-6 inline-flex items-center justify-center text-gray-500">
+                                        class="flex items-center px-3 py-2.5 text-body hover:bg-white/20 hover:text-white transition-all duration-300 group {{ $link['active'] ? 'bg-white/25 text-white shadow-lg rounded-base' : 'text-white/90' }}">
+                                        <span class="w-6 h-6 inline-flex items-center justify-center text-white">
                                             <i class="{{ $link['icon'] }}">
                                             </i> </span>
 

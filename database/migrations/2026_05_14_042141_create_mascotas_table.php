@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('mascotas', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('especie');
+            $table->string('raza')->nullable();
+            $table->string('edad')->nullable();
+            $table->enum('sexo', ['Macho', 'Hembra']);
+            $table->decimal('peso', 5, 2)->nullable();
+            $table->string('color')->nullable();
+            $table->text('observaciones')->nullable();
+            // Datos del dueño
+            $table->string('dueno_nombre');
+            $table->string('dueno_telefono')->nullable();
+            $table->string('dueno_correo')->nullable();
+            $table->string('dueno_direccion')->nullable();
             $table->timestamps();
         });
     }

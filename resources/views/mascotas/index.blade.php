@@ -24,7 +24,7 @@
                 <i class="fas fa-paw text-2xl"></i>
             </div>
             <div>
-                <h2 class="text-xl font-bold text-gray-800">Listado General de Pacientes (Mascotas)</h2>
+                <h2 class="text-xl font-bold text-gray-800">Listado General de Mascotas</h2>
                 <p class="text-xs text-gray-500">Administre el registro y expediente de las mascotas de la clínica</p>
             </div>
         </div>

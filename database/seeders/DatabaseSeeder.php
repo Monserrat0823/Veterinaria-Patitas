@@ -20,6 +20,15 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => 'password',
+            
+        ]);
+
+        $this->call([
+            RoleSeeder::class,
+            VeterinarioSeeder::class,
+            MascotaSeeder::class,
+            CitaSeeder::class,
         ]);
     }
 }

@@ -22,37 +22,35 @@
           <i class="fas fa-paw"></i>
         </div>
         <div>
-          <h2 class="text-xl font-bold text-gray-800">Registro de Nuevo Paciente (Mascota)</h2>
+          <h2 class="text-xl font-bold text-gray-800">Registro de Nueva Mascota</h2>
           <p class="text-sm text-gray-500">Complete la ficha clínica y los datos del propietario</p>
         </div>
       </div>
 
-      {{-- Contenedor de Tabs con Alpine.js --}}
-      <div x-data="{ tab: 'paciente' }">
-        
-        {{-- Navegación de Tabs --}}
-        <div class="flex border-b border-gray-200 mb-6 gap-2 overflow-x-auto">
-          <button type="button" @click="tab = 'paciente'" 
-                  :class="{ 'border-indigo-600 text-indigo-600 border-b-2 font-bold': tab === 'paciente', 'text-gray-500 hover:text-gray-700': tab !== 'paciente' }" 
-                  class="px-5 py-3 text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap outline-none focus:outline-none">
-            <i class="fas fa-paw text-lg"></i> Datos de la Mascota
-          </button>
-          
-          <button type="button" @click="tab = 'propietario'" 
-                  :class="{ 'border-indigo-600 text-indigo-600 border-b-2 font-bold': tab === 'propietario', 'text-gray-500 hover:text-gray-700': tab !== 'propietario' }" 
-                  class="px-5 py-3 text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap outline-none focus:outline-none">
-            <i class="fas fa-user text-lg"></i> Datos del dueño
-          </button>
-          
-          <button type="button" @click="tab = 'expediente'" 
-                  :class="{ 'border-indigo-600 text-indigo-600 border-b-2 font-bold': tab === 'expediente', 'text-gray-500 hover:text-gray-700': tab !== 'expediente' }" 
-                  class="px-5 py-3 text-sm font-medium transition-all flex items-center gap-2 whitespace-nowrap outline-none focus:outline-none">
-            <i class="fas fa-file-medical text-lg"></i> Observaciones Generales
-          </button>
-        </div>
+      {{-- Contenedor de Tabs con Componentes Blade --}}
+      <x-tabs active="mascota">
+        <x-slot name="header">
+          @php
+            $errMascota = $errors->hasAny(['nombre', 'especie', 'raza', 'edad', 'sexo', 'peso', 'color']);
+            $errDueno = $errors->hasAny(['dueno_nombre', 'dueno_telefono', 'dueno_correo', 'dueno_direccion']);
+            $errExpediente = $errors->hasAny(['observaciones']);
+          @endphp
 
-        {{-- Tab 1: Datos del Paciente --}}
-        <div x-show="tab === 'paciente'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+          <x-tabs-link tab="mascota" :error="$errMascota">
+            <i class="fas fa-paw text-lg"></i> Datos de la Mascota
+          </x-tabs-link>
+          
+          <x-tabs-link tab="propietario" :error="$errDueno">
+            <i class="fas fa-user text-lg"></i> Datos del dueño
+          </x-tabs-link>
+          
+          <x-tabs-link tab="expediente" :error="$errExpediente">
+            <i class="fas fa-file-medical text-lg"></i> Observaciones Generales
+          </x-tabs-link>
+        </x-slot>
+
+        {{-- Tab 1: Datos de la Mascota --}}
+        <x-tab-content tab="mascota">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -77,9 +75,9 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-calendar-alt text-indigo-500 mr-1"></i> Fecha de Nacimiento
+                <i class="fas fa-birthday-cake text-indigo-500 mr-1"></i> Edad aproximada
               </label>
-              <x-wire-input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" />
+              <x-wire-input name="edad" placeholder="Ej: 2 años, 6 meses..." value="{{ old('edad') }}" />
             </div>
 
             <div>
@@ -108,14 +106,14 @@
               <x-wire-input name="color" placeholder="Ej: Blanco con manchas negras" value="{{ old('color') }}" />
             </div>
           </div>
-        </div>
+        </x-tab-content>
 
-        {{-- Tab 2: Datos del Propietario --}}
-        <div x-show="tab === 'propietario'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-cloak>
+        {{-- Tab 2: Datos del Dueño --}}
+        <x-tab-content tab="propietario">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-user-circle text-purple-500 mr-1"></i> Nombre del Propietario <span class="text-red-500">*</span>
+                <i class="fas fa-user-circle text-purple-500 mr-1"></i> Nombre del Dueño <span class="text-red-500">*</span>
               </label>
               <x-wire-input name="dueno_nombre" placeholder="Nombre completo" value="{{ old('dueno_nombre') }}" required />
             </div>
@@ -141,10 +139,10 @@
               <x-wire-input name="dueno_direccion" placeholder="Calle, número, colonia..." value="{{ old('dueno_direccion') }}" />
             </div>
           </div>
-        </div>
+        </x-tab-content>
 
         {{-- Tab 3: Observaciones Generales --}}
-        <div x-show="tab === 'expediente'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100" x-cloak>
+        <x-tab-content tab="expediente">
           <div class="grid grid-cols-1 gap-6 p-2">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -153,9 +151,9 @@
               <textarea name="observaciones" rows="5" placeholder="Notas sobre cirugías previas, vacunas, comportamiento en clínica, etc." class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 shadow-sm">{{ old('observaciones') }}</textarea>
             </div>
           </div>
-        </div>
+        </x-tab-content>
 
-      </div>
+      </x-tabs>
 
       <x-slot name="footer">
         <div class="flex justify-end gap-x-3">
@@ -163,7 +161,7 @@
               <i class="fas fa-arrow-left mr-2"></i> Cancelar
             </x-wire-button>
             <x-wire-button type="submit" blue>
-              <i class="fas fa-save mr-2"></i> Guardar Paciente
+              <i class="fas fa-save mr-2"></i> Guardar Mascota
             </x-wire-button>
         </div>
       </x-slot>

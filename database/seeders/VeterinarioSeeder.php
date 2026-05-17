@@ -14,7 +14,7 @@ class VeterinarioSeeder extends Seeder
      */
     public function run()
     {
-        //veterinarios de prueba
+        //veterinario de prueba
         Veterinario::create([
             'nombre' => 'Dr. Juan Pérez',
             'especialidad' => 'Cirugía General',
@@ -22,25 +22,5 @@ class VeterinarioSeeder extends Seeder
             'correo_electronico' => 'juan.perez@vet.com',
         ]);
 
-        Veterinario::create([
-            'nombre' => 'Dra. María Gómez',
-            'especialidad' => 'Dermatología',
-            'telefono' => '555-5678',
-            'correo_electronico' => 'maria.gomez@vet.com',
-        ]);
-
-        Veterinario::create([
-            'nombre' => 'Dr. Carlos Rodríguez',
-            'especialidad' => 'Odontología',
-            'telefono' => '555-9012',
-            'correo_electronico' => 'carlos.rodriguez@vet.com',
-        ]);
-        
-        Veterinario::create([
-            'nombre' => 'Dra. Ana Martínez',
-            'especialidad' => 'Medicina Interna',
-            'telefono' => '555-3456',
-            'correo_electronico' => 'ana.martinez@vet.com',
-        ]);
     }
 }

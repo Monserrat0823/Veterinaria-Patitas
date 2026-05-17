@@ -11,7 +11,7 @@ class Mascota extends Model
         'nombre',
         'especie',
         'raza',
-        'fecha_nacimiento',
+        'edad',
         'sexo',
         'peso',
         'color',
@@ -23,7 +23,6 @@ class Mascota extends Model
     ];
 
     protected $casts = [
-        'fecha_nacimiento' => 'date',
         'peso' => 'decimal:2',
     ];
     

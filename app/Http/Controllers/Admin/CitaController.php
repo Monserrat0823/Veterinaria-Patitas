@@ -2,72 +2,119 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Datatables\CitaTable;
+use App\Http\Controllers\Controller;
 use App\Models\Cita;
 use App\Models\Mascota;
-use App\Models\Dueno;
 use App\Models\Veterinario;
-use App\Models\TipoMascota;
-
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class CitaController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(CitaTable $table)
     {
-        return view('citas.index');
+        $citas = $table->rows();
+        $columns = $table->columns();
+
+        return view('citas.index', compact('citas', 'columns'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('citas.create');
+        $mascotas = Mascota::orderBy('nombre')->get();
+        $veterinarios = Veterinario::orderBy('nombre')->get();
+
+        return view('citas.create', compact('mascotas', 'veterinarios'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'mascota_id' => 'required|exists:mascotas,id',
+            'veterinario_id' => 'required|exists:veterinarios,id',
+            'fecha_hora' => 'required|date',
+            'motivo' => 'required|string|max:255',
+            'estado' => 'required|in:Programada,Completada,Cancelada',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        Cita::create($data);
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Cita Registrada!',
+            'text' => 'La cita médica se agendó correctamente.'
+        ]);
+
+        return redirect()->route('admin.citas.index');
     }
 
-    public function show(string $id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Cita $cita)
     {
-        return view('admi.citas.show');
+        return view('citas.show', compact('cita'));
     }
 
-    public function edit(Mascota $mascota, Cita $cita)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Cita $cita)
     {
-        return view('citas.edit',compact('mascota','cita'));        
+        $mascotas = Mascota::orderBy('nombre')->get();
+        $veterinarios = Veterinario::orderBy('nombre')->get();
+
+        return view('citas.edit', compact('cita', 'mascotas', 'veterinarios'));
     }
 
-public function update(Request $request, Cita $cita)
-{
-    $request->validate([
-
-        'name_mascota' => 'required|string|min:2|max:255',
-        'raza' => 'nullable|string|min:3|max:255',
-        'dueno_id' => 'required|exists:duenos,id',
-        'fecha_cita' => 'required|date',
-        'motivo' => 'required|string|min:3|max:255',
-        'observaciones' => 'nullable|string|max:500',
-        'estado_cita' => 'required|string|min:3|max:100',
-        'veterinario_id' => 'required|exists:veterinarios,id',
-        'color' => 'nullable|string|min:3|max:100',
-        'tipo_mascota_id' => 'required|exists:tipos_mascotas,id',
-
-    ]);
-
-    $cita->update($request->all());
-
-    session()->flash('swal', [
-        'icon' => 'success',
-        'title' => '¡Éxito!',
-        'text' => 'Cita actualizada exitosamente.',
-    ]);
-
-    return redirect()->route('citas.index');
-}
-
-    public function destroy(string $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Cita $cita)
     {
-        //
+        $data = $request->validate([
+            'mascota_id' => 'required|exists:mascotas,id',
+            'veterinario_id' => 'required|exists:veterinarios,id',
+            'fecha_hora' => 'required|date',
+            'motivo' => 'required|string|max:255',
+            'estado' => 'required|in:Programada,Completada,Cancelada',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        $cita->update($data);
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => '¡Cita Actualizada!',
+            'text' => 'La cita médica se actualizó correctamente.'
+        ]);
+
+        return redirect()->route('admin.citas.index');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Cita $cita)
+    {
+        $cita->delete();
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Cita Eliminada',
+            'text' => 'La cita médica ha sido cancelada y eliminada.'
+        ]);
+
+        return redirect()->route('admin.citas.index');
     }
 }

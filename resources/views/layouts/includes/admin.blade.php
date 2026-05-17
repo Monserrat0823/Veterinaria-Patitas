@@ -24,6 +24,7 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <wireui:scripts />
     <script src="https://kit.fontawesome.com/a2e41abf3b.js" crossorigin="anonymous"></script>
     <!-SWALERT--->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -8,11 +8,12 @@ use Illuminate\Http\Request;
 
 class VeterinarioController extends Controller
 {
-    public function index()
+    public function index(\App\Datatables\VeterinarioTable $table)
     {
-        $veterinarios = Veterinario::latest()->get();
+        $veterinarios = $table->rows();
+        $columns = $table->columns();
 
-        return view('veterinarios.index', compact('veterinarios'));
+        return view('veterinarios.index', compact('veterinarios', 'columns'));
     }
 
     public function create()
@@ -26,7 +27,7 @@ class VeterinarioController extends Controller
             'nombre' => 'required|string|min:3|max:255',
             'especialidad' => 'required|string|min:3|max:255',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'correo_electronico' => 'nullable|email|max:255',
         ]);
 
         Veterinario::create($request->all());
@@ -56,7 +57,7 @@ class VeterinarioController extends Controller
             'nombre' => 'required|string|min:3|max:255',
             'especialidad' => 'required|string|min:3|max:255',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'correo_electronico' => 'nullable|email|max:255',
         ]);
 
         $veterinario->update($request->all());

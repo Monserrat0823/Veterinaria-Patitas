@@ -11,22 +11,19 @@
     'name'=> 'Crear',
   ]
 ]">  
-  <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-    <form action="{{route('admin.roles.store')}}" method="POST">
-      @csrf
-
-      <div class="mb-4">
-        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nombre</label>
-        <input type="text" id="name" name="name" placeholder="Nombre del rol" value="{{old('name')}}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-        @error('name')
-            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-        @enderror
-      </div>
-
-      <div class="flex justify-end mt-4">
-        <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Guardar</button>
-      </div>
-
-    </form>
-  </div>
+  
+  <form action="{{route('admin.roles.store')}}" method="POST">
+    @csrf
+    <x-wire-card title="Nuevo Rol">
+      <x-wire-input label="Nombre" name="name" placeholder="Nombre del rol" value="{{old('name')}}" />
+      
+      <x-slot name="footer">
+        <div class="flex justify-end gap-x-4">
+            <x-wire-button href="{{ route('admin.roles.index') }}" flat>Cancelar</x-wire-button>
+            <x-wire-button type="submit" blue>Guardar</x-wire-button>
+        </div>
+      </x-slot>
+    </x-wire-card>
+  </form>
+  
 </x-admin-layout>

@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use App\Datatables\RoleTable;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(RoleTable $table)
     {
-        return view('roles.index');
+        return view('roles.index', [
+            'columns' => $table->columns(),
+            'rows' => $table->rows(),
+        ]);
     }
 
     /**
@@ -31,7 +35,7 @@ class RoleController extends Controller
     {
         //validar que se cree nien
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
+            'name' => 'required|unique:roles,name', 
         ]);
 
         //si pasa la validacion 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mascota;
-use App\Models\Dueno;
 use Illuminate\Http\Request;
 
 class MascotaController extends Controller
@@ -12,11 +11,12 @@ class MascotaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(\App\Datatables\MascotaTable $table)
     {
-        $mascotas = Mascota::all();
+        $mascotas = $table->rows();
+        $columns = $table->columns();
 
-        return view('mascotas.index', compact('mascotas'));
+        return view('mascotas.index', compact('mascotas', 'columns'));
     }
 
     /**
@@ -24,9 +24,7 @@ class MascotaController extends Controller
      */
     public function create()
     {
-        $duenos = Dueno::all();
-
-        return view('mascotas.create', compact('duenos'));
+        return view('mascotas.create');
     }
 
     /**
@@ -34,28 +32,30 @@ class MascotaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validaciones
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'especie' => 'required|string|max:255',
-            'raza' => 'required|string|max:255',
-            'edad' => 'required|integer|min:0',
+            'raza' => 'nullable|string|max:255',
+            'fecha_nacimiento' => 'nullable|date',
             'sexo' => 'required|in:Macho,Hembra',
-            'dueno_id' => 'required|exists:duenos,id'
+            'peso' => 'nullable|numeric|min:0',
+            'color' => 'nullable|string|max:255',
+            'observaciones' => 'nullable|string',
+            'dueno_nombre' => 'required|string|max:255',
+            'dueno_telefono' => 'nullable|string|max:20',
+            'dueno_correo' => 'nullable|email|max:255',
+            'dueno_direccion' => 'nullable|string|max:255',
         ]);
 
-        // Crear mascota
         Mascota::create($data);
 
-        // Mensaje
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => 'Mascota registrada correctamente',
-            'text' => 'La mascota ha sido registrada correctamente'
+            'title' => '¡Éxito!',
+            'text' => 'Mascota registrada correctamente.'
         ]);
 
-        // Redirección
-        return redirect(route('admin.mascotas.index'));
+        return redirect()->route('admin.mascotas.index');
     }
 
     /**
@@ -71,9 +71,7 @@ class MascotaController extends Controller
      */
     public function edit(Mascota $mascota)
     {
-        $duenos = Dueno::all();
-
-        return view('mascotas.edit', compact('mascota', 'duenos'));
+        return view('mascotas.edit', compact('mascota'));
     }
 
     /**
@@ -81,28 +79,30 @@ class MascotaController extends Controller
      */
     public function update(Request $request, Mascota $mascota)
     {
-        // Validaciones
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'especie' => 'required|string|max:255',
-            'raza' => 'required|string|max:255',
-            'edad' => 'required|integer|min:0',
+            'raza' => 'nullable|string|max:255',
+            'fecha_nacimiento' => 'nullable|date',
             'sexo' => 'required|in:Macho,Hembra',
-            'dueno_id' => 'required|exists:duenos,id'
+            'peso' => 'nullable|numeric|min:0',
+            'color' => 'nullable|string|max:255',
+            'observaciones' => 'nullable|string',
+            'dueno_nombre' => 'required|string|max:255',
+            'dueno_telefono' => 'nullable|string|max:20',
+            'dueno_correo' => 'nullable|email|max:255',
+            'dueno_direccion' => 'nullable|string|max:255',
         ]);
 
-        // Actualizar
         $mascota->update($data);
 
-        // Mensaje
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => 'Mascota actualizada',
-            'text' => 'La mascota ha sido actualizada correctamente'
+            'title' => 'Actualizado',
+            'text' => 'Mascota actualizada correctamente.'
         ]);
 
-        // Redirección
-        return redirect(route('admin.mascotas.edit', $mascota));
+        return redirect()->route('admin.mascotas.edit', $mascota);
     }
 
     /**
@@ -110,17 +110,14 @@ class MascotaController extends Controller
      */
     public function destroy(Mascota $mascota)
     {
-        // Eliminar
         $mascota->delete();
 
-        // Mensaje
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => 'Mascota eliminada',
-            'text' => 'La mascota ha sido eliminada correctamente'
+            'title' => 'Eliminada',
+            'text' => 'Mascota eliminada correctamente.'
         ]);
 
-        // Redirección
-        return redirect(route('admin.mascotas.index'));
+        return redirect()->route('admin.mascotas.index');
     }
 }

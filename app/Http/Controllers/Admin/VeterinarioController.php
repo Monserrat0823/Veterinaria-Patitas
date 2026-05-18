@@ -24,14 +24,26 @@ class VeterinarioController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nombre' => 'required|string|min:3|max:255',
-            'especialidad' => 'required|string|min:3|max:255',
-            'telefono' => 'nullable|string|max:20',
-            'correo_electronico' => 'nullable|email|max:255',
-        ]);
+        $rules = [
+            'nombre' => 'required|string|min:3|max:150',
+            'especialidad' => 'required|string|min:3|max:150',
+            'telefono' => 'nullable|string|min:7|max:20',
+            'correo_electronico' => 'nullable|email:rfc,dns|unique:veterinarios,correo_electronico|max:150',
+        ];
 
-        Veterinario::create($request->all());
+        $messages = [
+            'nombre.required' => 'El nombre del especialista es obligatorio.',
+            'nombre.min' => 'El nombre debe tener al menos :min caracteres.',
+            'especialidad.required' => 'La especialidad es obligatoria.',
+            'especialidad.min' => 'La especialidad debe tener al menos :min caracteres.',
+            'telefono.min' => 'El teléfono debe tener al menos :min dígitos.',
+            'correo_electronico.email' => 'El correo electrónico no es válido.',
+            'correo_electronico.unique' => 'Este correo electrónico ya está registrado en el sistema.',
+        ];
+
+        $data = $request->validate($rules, $messages);
+
+        Veterinario::create($data);
 
         session()->flash('swal', [
             'icon' => 'success',
@@ -54,14 +66,26 @@ class VeterinarioController extends Controller
 
     public function update(Request $request, Veterinario $veterinario)
     {
-        $request->validate([
-            'nombre' => 'required|string|min:3|max:255',
-            'especialidad' => 'required|string|min:3|max:255',
-            'telefono' => 'nullable|string|max:20',
-            'correo_electronico' => 'nullable|email|max:255',
-        ]);
+        $rules = [
+            'nombre' => 'required|string|min:3|max:150',
+            'especialidad' => 'required|string|min:3|max:150',
+            'telefono' => 'nullable|string|min:7|max:20',
+            'correo_electronico' => 'nullable|email:rfc,dns|max:150|unique:veterinarios,correo_electronico,' . $veterinario->id,
+        ];
 
-        $veterinario->update($request->all());
+        $messages = [
+            'nombre.required' => 'El nombre del especialista es obligatorio.',
+            'nombre.min' => 'El nombre debe tener al menos :min caracteres.',
+            'especialidad.required' => 'La especialidad es obligatoria.',
+            'especialidad.min' => 'La especialidad debe tener al menos :min caracteres.',
+            'telefono.min' => 'El teléfono debe tener al menos :min dígitos.',
+            'correo_electronico.email' => 'El correo electrónico no es válido.',
+            'correo_electronico.unique' => 'Este correo electrónico ya está registrado en el sistema.',
+        ];
+
+        $data = $request->validate($rules, $messages);
+
+        $veterinario->update($data);
 
         session()->flash('swal', [
             'icon' => 'success',
@@ -134,4 +158,5 @@ class VeterinarioController extends Controller
 
         return redirect()->route('admin.veterinarios.index');
     }
-}   
+}
+   

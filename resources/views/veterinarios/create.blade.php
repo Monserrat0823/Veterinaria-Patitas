@@ -27,6 +27,8 @@
         </div>
       </div>
 
+      <x-validation-errors />
+
       {{-- Sección: Información Personal --}}
       <div class="mb-8">
         <div class="flex items-center gap-2 mb-4">

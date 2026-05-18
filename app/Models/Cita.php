@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cita extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'mascota_id',
@@ -24,12 +25,12 @@ class Cita extends Model
 
     public function mascota()
     {
-        return $this->belongsTo(Mascota::class);
+        return $this->belongsTo(Mascota::class)->withTrashed();
     }
 
     public function veterinario()
     {
-        return $this->belongsTo(Veterinario::class);
+        return $this->belongsTo(Veterinario::class)->withTrashed();
     }
 
     public function historialClinico()

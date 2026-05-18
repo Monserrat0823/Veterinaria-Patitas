@@ -27,6 +27,8 @@
         </div>
       </div>
 
+      <x-validation-errors />
+
       {{-- Contenedor de Tabs con Componentes Blade --}}
       <x-tabs active="mascota">
         <x-slot name="header">
@@ -56,14 +58,14 @@
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 <i class="fas fa-tag text-indigo-500 mr-1"></i> Nombre de la Mascota <span class="text-red-500">*</span>
               </label>
-              <x-wire-input name="nombre" placeholder="Ej: Max, Luna..." value="{{ old('nombre') }}" required />
+              <x-wire-input name="nombre" placeholder="Ej: Max, Luna..." value="{{ old('nombre') }}" />
             </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 <i class="fas fa-paw text-indigo-500 mr-1"></i> Especie <span class="text-red-500">*</span>
               </label>
-              <x-wire-input name="especie" placeholder="Ej: Perro, Gato, Conejo..." value="{{ old('especie') }}" required />
+              <x-wire-input name="especie" placeholder="Ej: Perro, Gato, Conejo..." value="{{ old('especie') }}" />
             </div>
 
             <div>
@@ -84,7 +86,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 <i class="fas fa-venus-mars text-indigo-500 mr-1"></i> Sexo <span class="text-red-500">*</span>
               </label>
-              <select name="sexo" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 shadow-sm" required>
+              <select name="sexo" class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 shadow-sm">
                 <option value="">Seleccione sexo...</option>
                 <option value="Macho" {{ old('sexo') === 'Macho' ? 'selected' : '' }}>Macho</option>
                 <option value="Hembra" {{ old('sexo') === 'Hembra' ? 'selected' : '' }}>Hembra</option>
@@ -115,7 +117,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-1">
                 <i class="fas fa-user-circle text-purple-500 mr-1"></i> Nombre del Dueño <span class="text-red-500">*</span>
               </label>
-              <x-wire-input name="dueno_nombre" placeholder="Nombre completo" value="{{ old('dueno_nombre') }}" required />
+              <x-wire-input name="dueno_nombre" placeholder="Nombre completo" value="{{ old('dueno_nombre') }}" />
             </div>
 
             <div>

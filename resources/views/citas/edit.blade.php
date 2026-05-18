@@ -169,16 +169,7 @@
             </div>
           </div>
 
-          @if($errors->any())
-            <div class="p-4 bg-red-50 rounded-2xl border border-red-200 text-red-700 text-sm">
-              <strong class="font-bold">Por favor corrige los siguientes errores:</strong>
-              <ul class="list-disc pl-5 mt-1 space-y-1 text-xs">
-                @foreach($errors->all() as $err)
-                  <li>{{ $err }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif
+          <x-validation-errors />
 
           <!-- Selector de Fecha -->
           <div class="max-w-md">

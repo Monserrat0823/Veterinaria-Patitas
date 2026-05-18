@@ -41,14 +41,29 @@ class CitaController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'mascota_id' => 'required|exists:mascotas,id',
-            'veterinario_id' => 'required|exists:veterinarios,id',
+        $rules = [
+            'mascota_id' => 'required|integer|exists:mascotas,id',
+            'veterinario_id' => 'required|integer|exists:veterinarios,id',
             'fecha_hora' => 'required|date',
-            'motivo' => 'required|string|max:255',
+            'motivo' => 'required|string|min:3|max:255',
             'estado' => 'required|in:Programada,Completada,Cancelada',
-            'observaciones' => 'nullable|string',
-        ]);
+            'observaciones' => 'nullable|string|max:1000',
+        ];
+
+        $messages = [
+            'mascota_id.required' => 'Debe seleccionar una mascota.',
+            'mascota_id.exists' => 'La mascota seleccionada no es válida.',
+            'veterinario_id.required' => 'Debe seleccionar un especialista.',
+            'veterinario_id.exists' => 'El especialista seleccionado no es válido o no está disponible.',
+            'fecha_hora.required' => 'La fecha y hora de la cita son obligatorias.',
+            'fecha_hora.date' => 'La fecha seleccionada no tiene un formato válido.',
+            'motivo.required' => 'El motivo de la cita es obligatorio.',
+            'motivo.min' => 'El motivo debe tener al menos :min caracteres.',
+            'estado.required' => 'El estado de la cita es obligatorio.',
+            'estado.in' => 'El estado seleccionado no es válido.',
+        ];
+
+        $data = $request->validate($rules, $messages);
 
         $fechaHora = \Carbon\Carbon::parse($data['fecha_hora']);
         $diaSemana = $fechaHora->dayOfWeek; // 0 (Domingo) a 6 (Sabado)
@@ -124,14 +139,29 @@ class CitaController extends Controller
      */
     public function update(Request $request, Cita $cita)
     {
-        $data = $request->validate([
-            'mascota_id' => 'required|exists:mascotas,id',
-            'veterinario_id' => 'required|exists:veterinarios,id',
+        $rules = [
+            'mascota_id' => 'required|integer|exists:mascotas,id',
+            'veterinario_id' => 'required|integer|exists:veterinarios,id',
             'fecha_hora' => 'required|date',
-            'motivo' => 'required|string|max:255',
+            'motivo' => 'required|string|min:3|max:255',
             'estado' => 'required|in:Programada,Completada,Cancelada',
-            'observaciones' => 'nullable|string',
-        ]);
+            'observaciones' => 'nullable|string|max:1000',
+        ];
+
+        $messages = [
+            'mascota_id.required' => 'Debe seleccionar una mascota.',
+            'mascota_id.exists' => 'La mascota seleccionada no es válida.',
+            'veterinario_id.required' => 'Debe seleccionar un especialista.',
+            'veterinario_id.exists' => 'El especialista seleccionado no es válido o no está disponible.',
+            'fecha_hora.required' => 'La fecha y hora de la cita son obligatorias.',
+            'fecha_hora.date' => 'La fecha seleccionada no tiene un formato válido.',
+            'motivo.required' => 'El motivo de la cita es obligatorio.',
+            'motivo.min' => 'El motivo debe tener al menos :min caracteres.',
+            'estado.required' => 'El estado de la cita es obligatorio.',
+            'estado.in' => 'El estado seleccionado no es válido.',
+        ];
+
+        $data = $request->validate($rules, $messages);
 
         if ($data['estado'] === 'Programada') {
             $fechaHora = \Carbon\Carbon::parse($data['fecha_hora']);
@@ -216,16 +246,28 @@ class CitaController extends Controller
 
     public function guardarAtencion(Request $request, Cita $cita)
     {
-        $data = $request->validate([
+        $rules = [
             'peso' => 'nullable|string|max:50',
             'temperatura' => 'nullable|string|max:50',
             'frecuencia_cardiaca' => 'nullable|string|max:50',
-            'sintomas' => 'required|string',
-            'diagnostico' => 'required|string',
-            'tratamiento' => 'required|string',
+            'sintomas' => 'required|string|min:5|max:2000',
+            'diagnostico' => 'required|string|min:5|max:2000',
+            'tratamiento' => 'required|string|min:5|max:2000',
             'vacuna_nombre' => 'nullable|string|max:255',
             'proxima_cita_estimada' => 'nullable|date',
-        ]);
+        ];
+
+        $messages = [
+            'sintomas.required' => 'Debe describir los síntomas observados en el paciente.',
+            'sintomas.min' => 'La descripción de los síntomas debe tener al menos :min caracteres.',
+            'diagnostico.required' => 'El diagnóstico médico es obligatorio.',
+            'diagnostico.min' => 'El diagnóstico debe tener al menos :min caracteres.',
+            'tratamiento.required' => 'El plan de tratamiento o receta médica es obligatorio.',
+            'tratamiento.min' => 'El tratamiento debe tener al menos :min caracteres.',
+            'proxima_cita_estimada.date' => 'La fecha estimada para la próxima consulta no tiene un formato válido.',
+        ];
+
+        $data = $request->validate($rules, $messages);
 
         HistorialClinico::create([
             'mascota_id' => $cita->mascota_id,

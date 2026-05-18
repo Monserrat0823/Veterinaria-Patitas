@@ -15,4 +15,19 @@ class Veterinario extends Model
         'telefono',
         'correo_electronico',
     ];
+
+    public function citas()
+    {
+        return $this->hasMany(Cita::class);
+    }
+
+    public function historialClinicos()
+    {
+        return $this->hasMany(HistorialClinico::class);
+    }
+
+    public function horarios()
+    {
+        return $this->hasMany(HorarioVeterinario::class)->orderBy('dia_semana');
+    }
 }

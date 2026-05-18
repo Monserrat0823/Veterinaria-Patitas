@@ -120,4 +120,10 @@ class MascotaController extends Controller
 
         return redirect()->route('admin.mascotas.index');
     }
+
+    public function historial(Mascota $mascota)
+    {
+        $mascota->load('historialClinicos.veterinario', 'historialClinicos.cita');
+        return view('mascotas.historial', compact('mascota'));
+    }
 }

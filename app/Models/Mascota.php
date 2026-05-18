@@ -26,4 +26,13 @@ class Mascota extends Model
         'peso' => 'decimal:2',
     ];
     
+    public function citas()
+    {
+        return $this->hasMany(Cita::class);
+    }
+
+    public function historialClinicos()
+    {
+        return $this->hasMany(HistorialClinico::class)->orderBy('fecha_consulta', 'desc');
+    }
 }

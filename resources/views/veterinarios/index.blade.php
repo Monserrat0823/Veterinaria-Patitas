@@ -42,15 +42,18 @@
                             @endif
                         </td>
                     @endforeach
-                    <td class="px-4 py-3 text-sm flex gap-2">
-                        <a href="{{ route('admin.veterinarios.edit', $row) }}" class="text-blue-500 hover:text-blue-700">
-                            <i class="fas fa-edit"></i>
+                    <td class="px-4 py-3 text-sm flex items-center gap-3">
+                        <a href="{{ route('admin.veterinarios.horarios', $row) }}" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-sm" title="Configurar Horario de Disponibilidad">
+                            <i class="fas fa-clock"></i> Horarios
+                        </a>
+                        <a href="{{ route('admin.veterinarios.edit', $row) }}" class="text-blue-500 hover:text-blue-700" title="Editar Doctor">
+                            <i class="fas fa-edit text-lg"></i>
                         </a>
                         <form action="{{ route('admin.veterinarios.destroy', $row) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar este veterinario?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-700">
-                                <i class="fas fa-trash"></i>
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Eliminar Doctor">
+                                <i class="fas fa-trash text-lg"></i>
                             </button>
                         </form>
                     </td>

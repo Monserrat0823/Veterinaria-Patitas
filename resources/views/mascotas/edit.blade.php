@@ -32,7 +32,7 @@
       <x-tabs active="mascota">
         <x-slot name="header">
           @php
-            $errMascota = $errors->hasAny(['nombre', 'especie', 'raza', 'edad', 'sexo', 'peso', 'color']);
+            $errMascota = $errors->hasAny(['nombre', 'especie', 'raza', 'fecha_nacimiento', 'sexo', 'peso', 'color']);
             $errDueno = $errors->hasAny(['dueno_nombre', 'dueno_telefono', 'dueno_correo', 'dueno_direccion']);
             $errExpediente = $errors->hasAny(['observaciones']);
           @endphp
@@ -76,9 +76,9 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-birthday-cake text-blue-500 mr-1"></i> Edad aproximada
+                <i class="fas fa-calendar-alt text-blue-500 mr-1"></i> Fecha de Nacimiento
               </label>
-              <x-wire-input name="edad" placeholder="Ej: 2 años, 6 meses..." value="{{ old('edad', $mascota->edad) }}" />
+              <x-wire-input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $mascota->fecha_nacimiento ? $mascota->fecha_nacimiento->format('Y-m-d') : '') }}" />
             </div>
 
             <div>
@@ -109,12 +109,12 @@
           </div>
         </x-tab-content>
 
-        {{-- Tab 2: Datos del Propietario --}}
-        <x-tab-content tab="propietario">
+        {{-- Tab 2: Datos del dueño --}}
+        <x-tab-content tab="dueno">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-user-circle text-purple-500 mr-1"></i> Nombre del Propietario <span class="text-red-500">*</span>
+                <i class="fas fa-user-circle text-purple-500 mr-1"></i> Nombre del Dueño <span class="text-red-500">*</span>
               </label>
               <x-wire-input name="dueno_nombre" placeholder="Nombre completo" value="{{ old('dueno_nombre', $mascota->dueno_nombre) }}" required />
             </div>
@@ -162,7 +162,7 @@
               <i class="fas fa-arrow-left mr-2"></i> Cancelar
             </x-wire-button>
             <x-wire-button type="submit" blue>
-              <i class="fas fa-save mr-2"></i> Actualizar Paciente
+              <i class="fas fa-save mr-2"></i> Actualizar Mascota
             </x-wire-button>
         </div>
       </x-slot>

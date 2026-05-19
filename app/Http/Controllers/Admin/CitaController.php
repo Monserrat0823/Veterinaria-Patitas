@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Datatables\CitaTable;
 use App\Http\Controllers\Controller;
+use App\Mail\CitaConfirmacion;
+use App\Mail\AtencionClinicaCompletada;
 use App\Models\Cita;
 use App\Models\HistorialClinico;
 use App\Models\Mascota;
 use App\Models\Veterinario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CitaController extends Controller
 {
@@ -102,12 +107,15 @@ class CitaController extends Controller
             ]);
         }
 
-        Cita::create($data);
+        $cita = Cita::create($data);
+
+        // Enviar correo de confirmación al dueño de la mascota
+        $this->enviarCorreoCita($cita, 'creada');
 
         session()->flash('swal', [
             'icon' => 'success',
             'title' => '¡Cita Registrada!',
-            'text' => 'La cita médica se agendó correctamente.'
+            'text' => 'La cita médica se agendó y se envió un correo de confirmación.'
         ]);
 
         return redirect()->route('admin.citas.index');
@@ -204,10 +212,14 @@ class CitaController extends Controller
 
         $cita->update($data);
 
+        // Enviar correo de actualización al dueño de la mascota
+        $tipo = ($data['estado'] === 'Cancelada') ? 'cancelada' : 'actualizada';
+        $this->enviarCorreoCita($cita, $tipo);
+
         session()->flash('swal', [
             'icon' => 'success',
             'title' => '¡Cita Actualizada!',
-            'text' => 'La cita médica se actualizó correctamente.'
+            'text' => 'La cita médica se actualizó y se envió un correo de notificación.'
         ]);
 
         return redirect()->route('admin.citas.index');
@@ -253,7 +265,9 @@ class CitaController extends Controller
             'sintomas' => 'required|string|min:5|max:2000',
             'diagnostico' => 'required|string|min:5|max:2000',
             'tratamiento' => 'required|string|min:5|max:2000',
-            'vacuna_nombre' => 'nullable|string|max:255',
+            'aplico_vacuna' => 'nullable|boolean',
+            'vacuna_nombre' => 'required_if:aplico_vacuna,1|nullable|string|max:255',
+            'vacuna_precio' => 'required_if:aplico_vacuna,1|nullable|numeric|min:0',
             'proxima_cita_estimada' => 'nullable|date',
         ];
 
@@ -264,12 +278,17 @@ class CitaController extends Controller
             'diagnostico.min' => 'El diagnóstico debe tener al menos :min caracteres.',
             'tratamiento.required' => 'El plan de tratamiento o receta médica es obligatorio.',
             'tratamiento.min' => 'El tratamiento debe tener al menos :min caracteres.',
+            'vacuna_nombre.required_if' => 'Debe ingresar el nombre de la vacuna aplicada.',
+            'vacuna_precio.required_if' => 'Debe ingresar el precio cobrado por la vacuna.',
+            'vacuna_precio.numeric' => 'El precio debe ser un valor numérico.',
             'proxima_cita_estimada.date' => 'La fecha estimada para la próxima consulta no tiene un formato válido.',
         ];
 
         $data = $request->validate($rules, $messages);
 
-        HistorialClinico::create([
+        $aplicoVacuna = $request->has('aplico_vacuna');
+
+        $historial = HistorialClinico::create([
             'mascota_id' => $cita->mascota_id,
             'veterinario_id' => $cita->veterinario_id,
             'cita_id' => $cita->id,
@@ -280,19 +299,64 @@ class CitaController extends Controller
             'sintomas' => $data['sintomas'],
             'diagnostico' => $data['diagnostico'],
             'tratamiento' => $data['tratamiento'],
-            'aplico_vacuna' => $request->has('aplico_vacuna'),
-            'vacuna_nombre' => $data['vacuna_nombre'] ?? null,
+            'aplico_vacuna' => $aplicoVacuna,
+            'vacuna_nombre' => $aplicoVacuna ? ($data['vacuna_nombre'] ?? null) : null,
+            'vacuna_precio' => $aplicoVacuna ? ($data['vacuna_precio'] ?? null) : null,
             'proxima_cita_estimada' => $data['proxima_cita_estimada'] ?? null,
         ]);
 
         $cita->update(['estado' => 'Completada']);
 
+        // Cargar relaciones para los PDFs
+        $historial->load('mascota', 'veterinario');
+
+        // Generar PDF de la receta en memoria
+        $pdfReceta = Pdf::loadView('pdf.receta-medica', compact('historial'))->output();
+
+        // Generar PDF de la vacuna si aplica
+        $pdfVacuna = null;
+        if ($historial->aplico_vacuna && $historial->vacuna_precio !== null) {
+            $pdfVacuna = Pdf::loadView('pdf.comprobante-vacuna', compact('historial'))->output();
+        }
+
+        // Enviar por correo al dueño si tiene correo registrado
+        $correo = $cita->mascota->dueno_correo ?? null;
+        if ($correo) {
+            try {
+                Mail::to($correo)->send(new AtencionClinicaCompletada($historial, $pdfReceta, $pdfVacuna));
+            } catch (\Throwable $e) {
+                Log::error("Error al enviar email de atención finalizada para cita #{$cita->id}: " . $e->getMessage());
+            }
+        }
+
         session()->flash('swal', [
             'icon' => 'success',
             'title' => '¡Consulta Registrada!',
-            'text' => 'El historial clínico se guardó y la cita se marcó como completada.'
+            'text' => 'El historial clínico se guardó, la cita se completó y se envió la receta/comprobante en PDF por correo.'
         ]);
 
         return redirect()->route('admin.citas.index');
+    }
+
+    /**
+     * Envía un correo de notificación al dueño de la mascota.
+     */
+    private function enviarCorreoCita(Cita $cita, string $tipo): void
+    {
+        // Cargar la mascota con su veterinario
+        $cita->load('mascota', 'veterinario');
+
+        $correo = $cita->mascota->dueno_correo ?? null;
+
+        if (!$correo) {
+            Log::warning("CitaController: No se pudo enviar correo para cita #{$cita->id} — el dueño no tiene correo registrado.");
+            return;
+        }
+
+        try {
+            Mail::to($correo)->send(new CitaConfirmacion($cita, $tipo));
+        } catch (\Throwable $e) {
+            Log::error("CitaController: Error al enviar correo para cita #{$cita->id}: " . $e->getMessage());
+        }
     }
 }

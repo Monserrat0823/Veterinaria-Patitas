@@ -22,6 +22,7 @@ class HistorialClinico extends Model
         'tratamiento',
         'aplico_vacuna',
         'vacuna_nombre',
+        'vacuna_precio',
         'proxima_cita_estimada',
     ];
 
@@ -29,6 +30,7 @@ class HistorialClinico extends Model
         'fecha_consulta' => 'datetime',
         'proxima_cita_estimada' => 'date',
         'aplico_vacuna' => 'boolean',
+        'vacuna_precio' => 'float',
     ];
 
     public function mascota()

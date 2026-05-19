@@ -34,7 +34,7 @@
       <x-tabs active="mascota">
         <x-slot name="header">
           @php
-            $errMascota = $errors->hasAny(['nombre', 'especie', 'raza', 'fecha_nacimiento', 'sexo', 'peso', 'color']);
+            $errMascota = $errors->hasAny(['nombre', 'especie', 'raza', 'edad', 'sexo', 'peso', 'color']);
             $errDueno = $errors->hasAny(['dueno_nombre', 'dueno_telefono', 'dueno_correo', 'dueno_direccion']);
             $errExpediente = $errors->hasAny(['observaciones']);
           @endphp
@@ -78,9 +78,9 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
-                <i class="fas fa-calendar-alt text-blue-500 mr-1"></i> Fecha de Nacimiento
+                <i class="fas fa-birthday-cake text-blue-500 mr-1"></i> Edad aproximada
               </label>
-              <x-wire-input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento', $mascota->fecha_nacimiento ? $mascota->fecha_nacimiento->format('Y-m-d') : '') }}" />
+              <x-wire-input name="edad" placeholder="Ej: 2 años, 6 meses..." value="{{ old('edad', $mascota->edad) }}" />
             </div>
 
             <div>
@@ -112,7 +112,7 @@
         </x-tab-content>
 
         {{-- Tab 2: Datos del dueño --}}
-        <x-tab-content tab="dueno">
+        <x-tab-content tab="propietario">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-2">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">

@@ -12,26 +12,50 @@
     ],
 ]">
 
-<div class="max-w-6xl mx-auto" x-data="{ aplicoVacuna: false }">
+<div class="max-w-6xl mx-auto" x-data="{ 
+    aplicoVacuna: false, 
+    selectedOption: '', 
+    vacunaNombre: '', 
+    vacunaPrecio: '',
+    onOptionChange() {
+        if (this.selectedOption === 'quintuple') {
+            this.vacunaNombre = 'Vacuna Quíntuple (Canina)';
+            this.vacunaPrecio = '350.00';
+        } else if (this.selectedOption === 'triple') {
+            this.vacunaNombre = 'Vacuna Triple Felina';
+            this.vacunaPrecio = '380.00';
+        } else if (this.selectedOption === 'rabia') {
+            this.vacunaNombre = 'Vacuna contra la Rabia';
+            this.vacunaPrecio = '250.00';
+        } else if (this.selectedOption === 'puppy') {
+            this.vacunaNombre = 'Vacuna Puppy (Canina)';
+            this.vacunaPrecio = '300.00';
+        } else if (this.selectedOption === 'parvovirus') {
+            this.vacunaNombre = 'Vacuna Parvovirus';
+            this.vacunaPrecio = '280.00';
+        } else if (this.selectedOption === 'custom') {
+            this.vacunaNombre = '';
+            this.vacunaPrecio = '';
+        } else {
+            this.vacunaNombre = '';
+            this.vacunaPrecio = '';
+        }
+    }
+}">
     
-    <!-- Encabezado Clínico -->
-    <div class="bg-gradient-to-r from-teal-600 via-emerald-600 to-cyan-700 p-8 rounded-3xl text-white shadow-xl mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-        <div class="flex items-center gap-5 z-10">
-            <div class="w-16 h-16 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center text-3xl shadow-inner border border-white/20">
-                <i class="fas fa-stethoscope"></i>
-            </div>
-            <div>
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-sm uppercase tracking-wider mb-1">
-                    Consulta en progreso
-                </span>
-                <h2 class="text-3xl font-black tracking-tight">Atención Clínica de {{ $cita->mascota->nombre }}</h2>
-                <p class="text-teal-100 text-sm mt-0.5 font-medium">Doctor: {{ $cita->veterinario->nombre }} • Motivo: {{ $cita->motivo }}</p>
-            </div>
+    <!-- Encabezado Clínico Simplificado -->
+    <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-100 mb-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+                Consulta en progreso
+            </span>
+            <h2 class="text-2xl font-black text-gray-800 tracking-tight">Atención Clínica de {{ $cita->mascota->nombre }}</h2>
+            <p class="text-gray-500 text-sm mt-1">Doctor: <strong class="text-gray-700 font-semibold">{{ $cita->veterinario->nombre }}</strong> • Motivo: <span class="text-gray-700">{{ $cita->motivo }}</span></p>
         </div>
-        <div class="z-10 flex gap-3">
-            <a href="{{ route('admin.citas.index') }}" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-all backdrop-blur-sm border border-white/20 text-sm flex items-center gap-2">
-                <i class="fas fa-times"></i> Cancelar
+        <div>
+            <a href="{{ route('admin.citas.index') }}" class="px-4 py-2 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold border border-gray-200 transition-colors text-sm flex items-center gap-1.5">
+                <i class="fas fa-times text-gray-400"></i> Salir
             </a>
         </div>
     </div>
@@ -150,9 +174,39 @@
                     </div>
                 </label>
 
-                <div x-show="aplicoVacuna" x-transition class="mt-4 p-6 rounded-2xl bg-emerald-50/80 border border-emerald-200 space-y-4">
-                    <label class="block text-sm font-bold text-emerald-950 mb-1">Nombre y Lote de la Vacuna aplicada <span class="text-red-500">*</span></label>
-                    <input type="text" name="vacuna_nombre" placeholder="Ej: Vacuna Quíntuple Zoetis (Lote #49281A) - Refuerzo Anual" class="w-full rounded-xl border border-emerald-300 bg-white py-2.5 px-4 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm" />
+                <div x-show="aplicoVacuna" x-transition class="mt-4 p-6 rounded-2xl bg-emerald-50/30 border border-emerald-100 space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-emerald-950 mb-2">Seleccione la vacuna aplicada:</label>
+                        <select x-model="selectedOption" @change="onOptionChange()" class="w-full rounded-xl border border-gray-200 bg-white py-2.5 px-4 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm font-medium text-gray-800">
+                            <option value="">-- Seleccione una vacuna --</option>
+                            <option value="quintuple">Vacuna Quíntuple (Canina) - $350.00</option>
+                            <option value="triple">Vacuna Triple Felina - $380.00</option>
+                            <option value="rabia">Vacuna contra la Rabia - $250.00</option>
+                            <option value="puppy">Vacuna Puppy (Canina) - $300.00</option>
+                            <option value="parvovirus">Vacuna Parvovirus - $280.00</option>
+                            <option value="custom">Otra vacuna (Ingresar manualmente)</option>
+                        </select>
+                    </div>
+
+                    <!-- Campos visibles según selección -->
+                    <div x-show="selectedOption !== ''" class="pt-4 border-t border-emerald-100/50 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Nombre de la Vacuna</label>
+                            <input type="text" name="vacuna_nombre" x-model="vacunaNombre" 
+                                   :readonly="selectedOption !== 'custom'"
+                                   placeholder="Ej: Vacuna Triple Felina (Lote #123)"
+                                   :required="aplicoVacuna"
+                                   class="w-full rounded-xl border border-gray-200 bg-white py-2.5 px-4 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Precio Cobrado ($)</label>
+                            <input type="number" step="0.01" name="vacuna_precio" x-model="vacunaPrecio" 
+                                   :readonly="selectedOption !== 'custom'"
+                                   placeholder="0.00"
+                                   :required="aplicoVacuna"
+                                   class="w-full rounded-xl border border-gray-200 bg-white py-2.5 px-4 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm" />
+                        </div>
+                    </div>
                 </div>
             </div>
 

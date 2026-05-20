@@ -22,6 +22,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     })->name('dashboard');
 
     Route::resource('roles', App\Http\Controllers\Admin\RoleController::class);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::resource('mascotas', App\Http\Controllers\Admin\MascotaController::class);
     Route::get('mascotas/{mascota}/historial', [App\Http\Controllers\Admin\MascotaController::class, 'historial'])->name('mascotas.historial');
     Route::resource('veterinarios', App\Http\Controllers\Admin\VeterinarioController::class);

@@ -1,4 +1,4 @@
-<x-admin-layout title="Agendar Cita Médica" :breadcrumbs="[
+<x-admin-layout title="Nueva Cita Médica" :breadcrumbs="[
     [
       'name'=> 'Dashboard',
       'href' => route('admin.dashboard'),
@@ -132,37 +132,38 @@
     <input type="hidden" name="veterinario_id" :value="vetId">
     <input type="hidden" name="fecha_hora" :value="fechaHora">
 
-    <div class="bg-white p-6 rounded-2xl shadow-xs border border-gray-200 mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-sans">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold border border-blue-100 flex-shrink-0">
+    {{-- Encabezado --}}
+    <div class="bg-white p-5 rounded-lg border border-gray-200 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl border border-blue-100 flex-shrink-0">
           <i class="fas fa-calendar-plus"></i>
         </div>
         <div>
-          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Nueva Cita Médica</h2>
+          <h2 class="text-xl font-bold text-gray-900">Nueva Cita Médica</h2>
           <p class="text-gray-500 text-xs mt-0.5">Encuentra disponibilidad en tiempo real y agenda la consulta</p>
         </div>
       </div>
       <div>
-        <a href="{{ route('admin.citas.index') }}" class="px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold border border-gray-200 rounded-lg transition-colors text-xs flex items-center gap-2">
+        <a href="{{ route('admin.citas.index') }}" class="px-3 py-1.5 bg-white hover:bg-gray-50 text-gray-700 font-medium border border-gray-300 rounded-lg text-xs flex items-center gap-2">
           <i class="fas fa-arrow-left"></i> Volver al listado
         </a>
       </div>
     </div>
 
     <!-- Contenedor Principal a 2 Columnas -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 font-sans">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 font-sans">
       
       <!-- COLUMNA IZQUIERDA: Búsqueda de Disponibilidad y Datos -->
-      <div class="lg:col-span-2 space-y-8">
+      <div class="lg:col-span-2 space-y-6">
         
         <!-- Búsqueda de Fechas y Horarios -->
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 transition-all space-y-6">
-          <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+        <div class="bg-white p-6 rounded-lg border border-gray-200 space-y-5">
+          <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100 text-sm">
               1
             </div>
             <div>
-              <h3 class="text-lg font-bold text-gray-900">1. Seleccionar Fecha y Especialista</h3>
+              <h3 class="text-base font-bold text-gray-900">Seleccionar Fecha y Especialista</h3>
               <p class="text-xs text-gray-500">Elija el día para ver los médicos disponibles y sus horarios libres</p>
             </div>
           </div>
@@ -170,55 +171,55 @@
           <x-validation-errors />
 
           <!-- Selector de Fecha -->
-          <div class="max-w-md">
-            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-              <i class="fas fa-calendar-day text-blue-500 mr-1.5"></i> Fecha de la Consulta
+          <div class="max-w-sm">
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">
+              <i class="fas fa-calendar-day text-blue-500 mr-1"></i> Fecha de la Consulta
             </label>
             <input type="date" x-model="fechaSeleccionada" min="{{ date('Y-m-d') }}"
-                   class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm font-bold text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs bg-white cursor-pointer" />
+                   class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white cursor-pointer" />
           </div>
 
           <!-- Listado veterinarios disponibles -->
-          <div class="space-y-4 pt-4">
-            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500">
-              <i class="fas fa-user-md text-blue-500 mr-1.5"></i> Especialistas en turno
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-gray-600">
+              <i class="fas fa-user-md text-blue-500 mr-1"></i> Especialistas en turno
             </label>
 
-            <div x-show="doctoresDisponibles.length === 0" class="p-8 bg-gray-50 rounded-2xl border border-dashed border-gray-300 text-center">
-              <p class="text-sm font-semibold text-gray-700">No hay doctores con horario de atención o cupos libres este día.</p>
+            <div x-show="doctoresDisponibles.length === 0" class="p-5 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
+              <p class="text-sm font-medium text-gray-700">No hay doctores con horario de atención o cupos libres este día.</p>
               <p class="text-xs text-gray-500 mt-1">Por favor, intente seleccionando una fecha diferente en el calendario.</p>
             </div>
 
             <!-- Grid de Doctores -->
-            <div class="space-y-4">
+            <div class="space-y-3">
               <template x-for="vet in doctoresDisponibles" :key="vet.id">
-                <div class="p-5 rounded-2xl border border-gray-200 bg-white shadow-xs transition-colors hover:border-blue-400">
-                  <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-100">
-                    <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-base border border-blue-100 flex-shrink-0">
+                <div class="p-4 rounded-lg border border-gray-200 bg-white hover:border-blue-300 transition-colors">
+                  <div class="flex items-center justify-between pb-2 mb-2 border-b border-gray-100">
+                    <div class="flex items-center gap-2">
+                      <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm border border-blue-100 flex-shrink-0">
                         <i class="fas fa-user-md"></i>
                       </div>
                       <div>
-                        <h4 class="font-bold text-sm text-gray-900" x-text="'Dr(a). ' + vet.nombre"></h4>
-                        <span class="text-xs font-medium px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-100" x-text="vet.especialidad"></span>
+                        <h4 class="font-semibold text-sm text-gray-900" x-text="'Dr(a). ' + vet.nombre"></h4>
+                        <span class="text-xs text-blue-600" x-text="vet.especialidad"></span>
                       </div>
                     </div>
-                    <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
                       <span x-text="vet.slots.length"></span> horarios
                     </span>
                   </div>
 
                   <!-- Grid de Horarios -->
                   <div>
-                    <span class="text-[11px] text-gray-400 font-bold block mb-2 uppercase tracking-wider">Horarios de consulta disponibles</span>
+                    <span class="text-xs text-gray-400 block mb-1.5">Horarios de consulta disponibles</span>
                     <div class="flex flex-wrap gap-2">
                       <template x-for="s in vet.slots" :key="s.value">
                         <button type="button" @click="seleccionarSlot(vet.id, s.value)"
-                                :class="fechaHora === s.value && vetId === vet.id ? 'bg-blue-600 text-white font-bold shadow-sm border-blue-600' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 font-medium'"
-                                class="px-3 py-1.5 rounded-lg border text-xs transition-all flex items-center gap-1.5 cursor-pointer">
-                          <i class="fas fa-clock text-[10px]" :class="fechaHora === s.value && vetId === vet.id ? 'text-blue-100' : 'text-blue-500'"></i>
+                                :class="fechaHora === s.value && vetId === vet.id ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-50 border-gray-200 text-gray-700 hover:border-blue-400'"
+                                class="px-3 py-1.5 rounded-lg border text-xs transition-colors flex items-center gap-1 cursor-pointer">
+                          <i class="fas fa-clock text-xs" :class="fechaHora === s.value && vetId === vet.id ? 'text-blue-100' : 'text-blue-400'"></i>
                           <span x-text="s.hora"></span>
-                          <span x-show="fechaHora === s.value && vetId === vet.id" class="ml-1"><i class="fas fa-check text-[10px]"></i></span>
+                          <span x-show="fechaHora === s.value && vetId === vet.id"><i class="fas fa-check text-xs"></i></span>
                         </button>
                       </template>
                     </div>
@@ -228,30 +229,30 @@
             </div>
           </div>
 
-          <div x-show="!fechaHora || !vetId" class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-800 text-xs flex items-center gap-2 font-medium">
+          <div x-show="!fechaHora || !vetId" class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-amber-800 text-xs flex items-center gap-2">
             <i class="fas fa-exclamation-circle text-amber-600"></i>
             Haga clic en uno de los horarios arriba disponibles para confirmar la cita.
           </div>
         </div>
 
         <!--Información del Paciente -->
-        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
-          <div class="flex items-center gap-3 mb-2 pb-4 border-b border-gray-100">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100">
+        <div class="bg-white p-6 rounded-lg border border-gray-200 space-y-5">
+          <div class="flex items-center gap-3 pb-3 border-b border-gray-100">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-100 text-sm">
               2
             </div>
             <div>
-              <h3 class="text-lg font-bold text-gray-900">2. Detalles del Paciente y Motivo</h3>
+              <h3 class="text-base font-bold text-gray-900">Detalles del Paciente y Motivo</h3>
               <p class="text-xs text-gray-500">Identifique al paciente y el propósito de la atención</p>
             </div>
           </div>
 
           <!-- Selección de Mascota -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-              <i class="fas fa-paw text-blue-500 mr-1.5"></i> Paciente (Mascota) <span class="text-red-500">*</span>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">
+              <i class="fas fa-paw text-blue-500 mr-1"></i> Paciente (Mascota) <span class="text-red-500">*</span>
             </label>
-            <select name="mascota_id" x-model="mascotaId" class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs bg-white" required>
+            <select name="mascota_id" x-model="mascotaId" class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white" required>
               <option value="" disabled selected>-- Seleccionar paciente --</option>
               @foreach($mascotas as $mascota)
                 <option value="{{ $mascota->id }}">
@@ -259,39 +260,39 @@
                 </option>
               @endforeach
             </select>
-            @error('mascota_id') <span class="text-xs text-red-500 mt-1.5 block font-medium">{{ $message }}</span> @enderror
+            @error('mascota_id') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
           </div>
 
           <!-- Motivo de la Cita -->
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-              <i class="fas fa-stethoscope text-blue-500 mr-1.5"></i> Motivo de la Cita <span class="text-red-500">*</span>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5">
+              <i class="fas fa-stethoscope text-blue-500 mr-1"></i> Motivo de la Cita <span class="text-red-500">*</span>
             </label>
-            <textarea name="motivo" x-model="motivo" rows="2" placeholder="Escribe el motivo detallado de la consulta..." class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs bg-white" required></textarea>
-            @error('motivo') <span class="text-xs text-red-500 mt-1.5 block font-medium">{{ $message }}</span> @enderror
+            <textarea name="motivo" x-model="motivo" rows="2" placeholder="Escribe el motivo detallado de la consulta..." class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white" required></textarea>
+            @error('motivo') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Estado -->
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-                <i class="fas fa-flag text-blue-500 mr-1.5"></i> Estado Inicial <span class="text-red-500">*</span>
+              <label class="block text-xs font-semibold text-gray-600 mb-1.5">
+                <i class="fas fa-flag text-blue-500 mr-1"></i> Estado Inicial <span class="text-red-500">*</span>
               </label>
-              <select name="estado" x-model="estado" class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs bg-white" required>
+              <select name="estado" x-model="estado" class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white" required>
                 <option value="Programada">Programada</option>
                 <option value="Completada">Completada</option>
                 <option value="Cancelada">Cancelada</option>
               </select>
-              @error('estado') <span class="text-xs text-red-500 mt-1.5 block font-medium">{{ $message }}</span> @enderror
+              @error('estado') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
 
             <!-- Observaciones -->
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-                <i class="fas fa-file-alt text-blue-500 mr-1.5"></i> Notas / Recomendaciones
+              <label class="block text-xs font-semibold text-gray-600 mb-1.5">
+                <i class="fas fa-file-alt text-blue-500 mr-1"></i> Notas / Recomendaciones
               </label>
-              <input type="text" name="observaciones" x-model="observaciones" placeholder="Ej. Traer carnet de vacunas..." class="w-full rounded-xl border border-gray-300 py-2.5 px-4 text-sm font-medium text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-xs bg-white" />
-              @error('observaciones') <span class="text-xs text-red-500 mt-1.5 block font-medium">{{ $message }}</span> @enderror
+              <input type="text" name="observaciones" x-model="observaciones" placeholder="Ej. Traer carnet de vacunas..." class="w-full rounded-lg border border-gray-300 py-2 px-3 text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white" />
+              @error('observaciones') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
             </div>
           </div>
         </div>
@@ -300,87 +301,84 @@
 
       <!-- COLUMNA DERECHA: Tarjeta de Resumen -->
       <div class="lg:col-span-1">
-        <div class="bg-white rounded-3xl shadow-sm border border-gray-200 p-8 sticky top-8 flex flex-col justify-between space-y-6">
-          <div class="relative z-10 space-y-6">
-            <div class="flex items-center gap-3 pb-6 border-b border-gray-100">
-              <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs font-bold">
-                <i class="fas fa-receipt"></i>
+        <div class="bg-white rounded-lg border border-gray-200 p-6 sticky top-8 space-y-5">
+          <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
+            <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm">
+              <i class="fas fa-receipt"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-gray-800">Resumen de Cita</h3>
+              <span class="text-xs text-gray-500" x-text="estado"></span>
+            </div>
+          </div>
+
+          <!-- Ficha de Datos -->
+          <div class="space-y-3 font-sans">
+            <!-- Paciente -->
+            <div class="p-3 rounded-lg bg-gray-50 border border-gray-100 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-paw"></i>
               </div>
-              <div>
-                <h3 class="text-xl font-black text-gray-800">Resumen de Cita</h3>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200" x-text="estado"></span>
+              <div class="overflow-hidden">
+                <span class="text-xs font-semibold text-gray-400 block">Paciente asignado</span>
+                <template x-if="mascotaSeleccionada">
+                  <div>
+                    <strong class="text-sm font-bold text-gray-800 block truncate" x-text="mascotaSeleccionada.nombre"></strong>
+                    <span class="text-xs text-gray-500 block truncate" x-text="mascotaSeleccionada.especie + ' • Dueño: ' + mascotaSeleccionada.dueno"></span>
+                  </div>
+                </template>
+                <template x-if="!mascotaSeleccionada">
+                  <span class="text-sm font-medium text-amber-600">Ninguno seleccionado</span>
+                </template>
               </div>
             </div>
 
-            <!-- Ficha de Datos -->
-            <div class="space-y-4 font-sans">
-              <!-- Paciente -->
-              <div class="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg flex-shrink-0">
-                  <i class="fas fa-paw"></i>
-                </div>
-                <div class="overflow-hidden">
-                  <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-0.5">Paciente asignado</span>
-                  <template x-if="mascotaSeleccionada">
-                    <div>
-                      <strong class="text-sm font-black text-gray-800 block truncate" x-text="mascotaSeleccionada.nombre"></strong>
-                      <span class="text-xs text-gray-500 block truncate" x-text="mascotaSeleccionada.especie + ' • Dueño: ' + mascotaSeleccionada.dueno"></span>
-                    </div>
-                  </template>
-                  <template x-if="!mascotaSeleccionada">
-                    <span class="text-sm font-bold text-amber-600">Ninguno seleccionado</span>
-                  </template>
-                </div>
+            <!-- Doctor -->
+            <div class="p-3 rounded-lg bg-gray-50 border border-gray-100 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-user-md"></i>
               </div>
+              <div class="overflow-hidden">
+                <span class="text-xs font-semibold text-gray-400 block">Doctor a cargo</span>
+                <template x-if="doctorSeleccionado">
+                  <div>
+                    <strong class="text-sm font-bold text-gray-800 block truncate" x-text="doctorSeleccionado.nombre"></strong>
+                    <span class="text-xs text-blue-600 font-medium block truncate" x-text="doctorSeleccionado.especialidad"></span>
+                  </div>
+                </template>
+                <template x-if="!doctorSeleccionado">
+                  <span class="text-sm font-medium text-amber-600">Ningún doctor seleccionado</span>
+                </template>
+              </div>
+            </div>
 
-              <!-- Doctor -->
-              <div class="p-4 rounded-2xl bg-gray-50/80 border border-gray-100 flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg flex-shrink-0">
-                  <i class="fas fa-user-md"></i>
-                </div>
-                <div class="overflow-hidden">
-                  <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-0.5">Doctor a cargo</span>
-                  <template x-if="doctorSeleccionado">
-                    <div>
-                      <strong class="text-sm font-black text-gray-800 block truncate" x-text="doctorSeleccionado.nombre"></strong>
-                      <span class="text-xs text-blue-600 font-bold block truncate" x-text="doctorSeleccionado.especialidad"></span>
-                    </div>
-                  </template>
-                  <template x-if="!doctorSeleccionado">
-                    <span class="text-sm font-bold text-amber-600">Ningún doctor seleccionado</span>
-                  </template>
-                </div>
+            <!-- Fecha y Hora -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-blue-50 border border-blue-100 text-center">
+                <i class="fas fa-calendar-day text-blue-500 mb-1"></i>
+                <span class="text-xs font-semibold text-blue-500 block">Fecha</span>
+                <strong class="text-sm font-bold text-blue-900 block" x-text="fechaFormateada"></strong>
               </div>
+              <div class="p-3 rounded-lg bg-blue-50 border border-blue-100 text-center">
+                <i class="fas fa-clock text-blue-500 mb-1"></i>
+                <span class="text-xs font-semibold text-blue-500 block">Hora</span>
+                <strong class="text-sm font-bold text-blue-900 block" x-text="horaFormateada"></strong>
+              </div>
+            </div>
 
-              <!-- Fecha y Hora -->
-              <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 text-center">
-                  <i class="fas fa-calendar-day text-blue-600 mb-1 text-lg"></i>
-                  <span class="text-[11px] font-bold uppercase tracking-wider text-blue-500 block">Fecha</span>
-                  <strong class="text-sm font-black text-blue-950 block" x-text="fechaFormateada"></strong>
-                </div>
-                <div class="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 text-center">
-                  <i class="fas fa-clock text-blue-600 mb-1 text-lg"></i>
-                  <span class="text-[11px] font-bold uppercase tracking-wider text-blue-500 block">Hora</span>
-                  <strong class="text-sm font-black text-blue-950 block" x-text="horaFormateada"></strong>
-                </div>
-              </div>
-
-              <!-- Motivo preview -->
-              <div class="p-4 rounded-2xl bg-gray-50/80 border border-gray-100">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-1">Motivo / Notas</span>
-                <p class="text-xs font-semibold text-gray-700 italic leading-relaxed" x-text="motivo ? '“' + motivo + '”' : 'Sin motivo escrito aún...'"></p>
-              </div>
+            <!-- Motivo preview -->
+            <div class="p-3 rounded-lg bg-gray-50 border border-gray-100">
+              <span class="text-xs font-semibold text-gray-400 block mb-1">Motivo / Notas</span>
+              <p class="text-xs text-gray-700 italic" x-text="motivo ? motivo : 'Sin motivo escrito aún...'"></p>
             </div>
           </div>
 
           <!-- Botón de Envío -->
-          <div class="relative z-10 pt-4 border-t border-gray-100">
+          <div class="pt-3 border-t border-gray-100">
             <button type="submit" :disabled="!fechaHora || !vetId || !mascotaId || !motivo"
-                    class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-base shadow-xl shadow-blue-500/30 transition-all flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                    class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
               <i class="fas fa-check-circle"></i> Confirmar y Agendar Cita
             </button>
-            <p class="text-[11px] text-gray-400 text-center mt-2 font-medium">Al confirmar, el paciente quedará registrado en la agenda del doctor.</p>
           </div>
         </div>
       </div>

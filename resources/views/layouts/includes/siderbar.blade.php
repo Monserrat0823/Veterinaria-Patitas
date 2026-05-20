@@ -14,6 +14,13 @@
             ],
 
             [
+                'name'=> 'Usuarios',
+                'icon' => 'fa-solid fa-users',
+                'href'=> route('admin.users.index'),
+                'active'=> request()->routeIs('admin.users.*'),
+            ],
+
+            [
                 'name'=> 'Veterinarios',
                 'icon' => 'fa-solid fa-user-md',
                 'href'=> route('admin.veterinarios.index'), 
